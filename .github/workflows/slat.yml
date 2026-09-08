@@ -1,0 +1,25 @@
+name: SLAT-YOLO checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      YOLO_AUTOINSTALL: "false"
+      YOLO_CONFIG_DIR: /tmp/slat-yolo-settings
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install -e . pytest ruff==0.16.6
+      - run: ruff check ultralytics/nn/extra_modules ultralytics/utils/slat_loss.py my_project --exclude my_project/results
+      - run: python -m pytest my_project/tests -o addopts='' -q

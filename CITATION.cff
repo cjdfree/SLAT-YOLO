@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "Please cite this software release and the associated SLAT-YOLO manuscript."
+type: software
+title: "SLAT-YOLO"
+authors:
+  - name: "SLAT-YOLO contributors"
+version: 0.1.0
+date-released: 2026-09-08
+url: "https://github.com/cjdfree/SLAT-YOLO"
+repository-code: "https://github.com/cjdfree/SLAT-YOLO"
+license: AGPL-3.0
+abstract: "Recovered track slab crack detection code and experimental results based on Ultralytics YOLO11."
