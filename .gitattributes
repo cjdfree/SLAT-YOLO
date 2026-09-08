@@ -7,3 +7,7 @@
 *.png binary
 *.jpg binary
 *.pt binary
+
+# Preserve original experimental files byte-for-byte for provenance verification.
+my_project/provenance/original_yaml/** -text
+my_project/results/** -text
