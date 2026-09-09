@@ -1,7 +1,7 @@
 # Archived settings; paths and names follow the paper-facing release layout.
 task: detect
 mode: train
-model: my_project/yaml/yolo11n.yaml
+model: my_project/yaml/yolo11n-C3k2-CA-VoV-GSCSP-MPCR-Head.yaml
 epochs: 1200
 time: null
 patience: 0
@@ -13,7 +13,7 @@ cache: false
 device: 0
 workers: 8
 project: my_project/outputs
-name: yolo11n
+name: yolo11n-C3k2-CA-VoV-GSCSP-MPCR-Head-GIoU
 exist_ok: false
 pretrained: false
 optimizer: auto
@@ -104,3 +104,4 @@ erasing: 0.4
 crop_fraction: 1.0
 cfg: null
 tracker: botsort.yaml
+save_dir: my_project/outputs/yolo11n-C3k2-CA-VoV-GSCSP-MPCR-Head-GIoU

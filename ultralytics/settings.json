@@ -1,0 +1,19 @@
+{
+  "settings_version": "0.0.8",
+  "datasets_dir": "E:\\\u8bfe\u9898\u7ec4\\\u8bfe\u9898\u7814\u7a76\u65b9\u5411\\\u89c6\u89c9\u68c0\u6d4b+\u5927\u6a21\u578b\u8f68\u9053\u7ef4\u62a4\u51b3\u7b56\\\u8bba\u6587\\\u5c0f\u8bba\u6587-YOLO11\u8f68\u9053\u677f\u88c2\u7f1d\u76ee\u6807\u68c0\u6d4b\\datasets",
+  "weights_dir": "E:\\\u8bfe\u9898\u7ec4\\\u8bfe\u9898\u7814\u7a76\u65b9\u5411\\\u89c6\u89c9\u68c0\u6d4b+\u5927\u6a21\u578b\u8f68\u9053\u7ef4\u62a4\u51b3\u7b56\\\u8bba\u6587\\\u5c0f\u8bba\u6587-YOLO11\u8f68\u9053\u677f\u88c2\u7f1d\u76ee\u6807\u68c0\u6d4b\\SLAT-YOLO\\weights",
+  "runs_dir": "E:\\\u8bfe\u9898\u7ec4\\\u8bfe\u9898\u7814\u7a76\u65b9\u5411\\\u89c6\u89c9\u68c0\u6d4b+\u5927\u6a21\u578b\u8f68\u9053\u7ef4\u62a4\u51b3\u7b56\\\u8bba\u6587\\\u5c0f\u8bba\u6587-YOLO11\u8f68\u9053\u677f\u88c2\u7f1d\u76ee\u6807\u68c0\u6d4b\\SLAT-YOLO\\runs",
+  "uuid": "1f679dc4017b727a1c0a0259ada66210b06f762dfb802da380c860a25b29cd96",
+  "sync": true,
+  "api_key": "",
+  "openai_api_key": "",
+  "clearml": true,
+  "comet": true,
+  "dvc": true,
+  "mlflow": true,
+  "raytune": true,
+  "tensorboard": false,
+  "wandb": false,
+  "vscode_msg": true,
+  "openvino_msg": true
+}

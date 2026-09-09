@@ -49,7 +49,7 @@ def test_wise_shape_geometry_and_running_mean():
 
 def test_loss_selection_and_training_step():
     """Exercise actual detector assignment and loss while checking upstream CIoU stays the default."""
-    for name, custom in [("yolo11.yaml", False), ("slat-yolo.yaml", True)]:
+    for name, custom in [("yolo11n.yaml", False), ("slat-yolo.yaml", True)]:
         wrapper = YOLO(str(ROOT / "my_project/yaml" / name), task="detect", verbose=False)
         model = wrapper.model.train()
         model.args = get_cfg(overrides=model.args)
