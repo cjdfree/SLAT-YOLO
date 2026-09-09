@@ -6,20 +6,21 @@ scales:
   n: [0.50, 0.25, 1024]
 
 backbone:
+  # C3k2-CA stages retain two nodes: neck shortcuts also use pre-CA features.
   # [from, repeats, module, args]
   - [-1, 1, Conv, [64, 3, 2]]
   - [-1, 1, Conv, [128, 3, 2]]
   - [-1, 2, "C3k2", [256, false, 0.25]]
-  - [-1, 2, "CoordAtt", [256]]
+  - [-1, 2, "CA", [256]]
   - [-1, 1, Conv, [256, 3, 2]]
   - [-1, 2, "C3k2", [512, false, 0.25]]
-  - [-1, 2, "CoordAtt", [512]]
+  - [-1, 2, "CA", [512]]
   - [-1, 1, Conv, [512, 3, 2]]
   - [-1, 2, "C3k2", [512, true]]
-  - [-1, 2, "CoordAtt", [512]]
+  - [-1, 2, "CA", [512]]
   - [-1, 1, Conv, [1024, 3, 2]]
   - [-1, 2, "C3k2", [1024, true]]
-  - [-1, 2, "CoordAtt", [1024]]
+  - [-1, 2, "CA", [1024]]
   - [-1, 1, "SPPF", [1024, 5]]
   - [-1, 2, "C2PSA", [1024]]
 

@@ -1,0 +1,9 @@
+[
+  {
+    "name": "ablation-checkpoints.zip",
+    "kind": "checkpoints",
+    "bytes": 118969724,
+    "sha256": "e60e6a8883974ba24de2701593e44d582149524d8741289fa4496eac1a785e16",
+    "url": "https://github.com/cjdfree/SLAT-YOLO/releases/download/v0.1.1/ablation-checkpoints.zip"
+  }
+]

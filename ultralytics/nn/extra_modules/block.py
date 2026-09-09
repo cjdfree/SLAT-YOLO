@@ -104,8 +104,8 @@ def DcovN(c1, c2, depth, kernel_size=3, patch_size=3):
     return dcovn
 
 
-class MultiSEAM(nn.Module):
-    """MultiSEAM implementation retained from the track slab experiments."""
+class MPCR(nn.Module):
+    """MPCR implementation retained from the track slab experiments."""
 
     def __init__(self, c1, c2, depth, kernel_size=3, patch_size=(3, 5, 7), reduction=16):
         """Initialize layers and parameters."""
@@ -137,3 +137,7 @@ class MultiSEAM(nn.Module):
         y = self.fc(y).view(b, c, 1, 1)
         y = torch.exp(y)
         return x * y.expand_as(x)
+
+
+# Legacy pickle names: old Releases resolve to the paper-named implementations.
+MultiSEAM = MPCR

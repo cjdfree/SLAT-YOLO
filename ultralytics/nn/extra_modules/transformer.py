@@ -6,7 +6,7 @@ from torch import nn
 
 from ultralytics.nn.modules.block import C2PSA, PSABlock
 
-from .attention import AttentionTSSA
+from .attention import TSSA
 from .mona import Mona
 from .semnet import SEFN
 from .transMamba import SpectralEnhancedFFN
@@ -39,8 +39,8 @@ class DynamicTanh(nn.Module):
         return f"normalized_shape={self.normalized_shape}, alpha_init_value={self.alpha_init_value}, channels_last={self.channels_last}"
 
 
-class TSSAlock_DYT_Mona_SEFN(PSABlock):
-    """TSSAlock_DYT_Mona_SEFN implementation retained from the track slab experiments."""
+class STRBlock(PSABlock):
+    """STRBlock implementation retained from the track slab experiments."""
 
     def __init__(self, c, attn_ratio=0.5, num_heads=4, shortcut=True) -> None:
         """Initialize layers and parameters."""
@@ -50,7 +50,7 @@ class TSSAlock_DYT_Mona_SEFN(PSABlock):
         self.dyt2 = DynamicTanh(normalized_shape=c, channels_last=False)
         self.mona1 = Mona(c)
         self.mona2 = Mona(c)
-        self.attn = AttentionTSSA(c, num_heads=num_heads)
+        self.attn = TSSA(c, num_heads=num_heads)
 
     def forward(self, x):
         """Executes a forward pass through PSABlock, applying attention and feed-forward layers to the input tensor."""
@@ -67,18 +67,18 @@ class TSSAlock_DYT_Mona_SEFN(PSABlock):
         return x
 
 
-class C2TSSA_DYT_Mona_SEFN(C2PSA):
-    """C2TSSA_DYT_Mona_SEFN implementation retained from the track slab experiments."""
+class C2STR(C2PSA):
+    """C2STR implementation retained from the track slab experiments."""
 
     def __init__(self, c1, c2, n=1, e=0.5):
         """Initialize layers and parameters."""
         super().__init__(c1, c2, n, e)
         self.m = nn.Sequential(
-            *(TSSAlock_DYT_Mona_SEFN(self.c, attn_ratio=0.5, num_heads=self.c // 64) for _ in range(n))
+            *(STRBlock(self.c, attn_ratio=0.5, num_heads=self.c // 64) for _ in range(n))
         )
 
 
-class TSSAlock_DYT_Mona_SEFFN(PSABlock):
+class STRBlockSpectral(PSABlock):
     """Historical spectral implementation recovered from the archived YOLO11 project."""
 
     def __init__(self, c, attn_ratio=0.5, num_heads=4, shortcut=True) -> None:
@@ -89,7 +89,7 @@ class TSSAlock_DYT_Mona_SEFFN(PSABlock):
         self.dyt2 = DynamicTanh(normalized_shape=c, channels_last=False)
         self.mona1 = Mona(c)
         self.mona2 = Mona(c)
-        self.attn = AttentionTSSA(c, num_heads=num_heads)
+        self.attn = TSSA(c, num_heads=num_heads)
 
     def forward(self, x):
         """Executes a forward pass through PSABlock, applying attention and feed-forward layers to the input tensor."""
@@ -105,12 +105,19 @@ class TSSAlock_DYT_Mona_SEFFN(PSABlock):
         return x
 
 
-class C2TSSA_DYT_Mona_SEFFN(C2PSA):
+class C2STRSpectral(C2PSA):
     """Historical spectral implementation recovered from the archived YOLO11 project."""
 
     def __init__(self, c1, c2, n=1, e=0.5):
         """Initialize the spectral transformation."""
         super().__init__(c1, c2, n, e)
         self.m = nn.Sequential(
-            *(TSSAlock_DYT_Mona_SEFFN(self.c, attn_ratio=0.5, num_heads=self.c // 64) for _ in range(n))
+            *(STRBlockSpectral(self.c, attn_ratio=0.5, num_heads=self.c // 64) for _ in range(n))
         )
+
+
+# Legacy pickle names: old Releases resolve to the paper-named implementations.
+C2TSSA_DYT_Mona_SEFFN = C2STRSpectral
+C2TSSA_DYT_Mona_SEFN = C2STR
+TSSAlock_DYT_Mona_SEFFN = STRBlockSpectral
+TSSAlock_DYT_Mona_SEFN = STRBlock

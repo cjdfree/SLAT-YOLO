@@ -32,8 +32,8 @@ class h_swish(nn.Module):
         return x * self.sigmoid(x)
 
 
-class CoordAtt(nn.Module):
-    """CoordAtt implementation retained from the track slab experiments."""
+class CA(nn.Module):
+    """CA implementation retained from the track slab experiments."""
 
     def __init__(self, inp, reduction=32):
         """Initialize layers and parameters."""
@@ -65,8 +65,8 @@ class CoordAtt(nn.Module):
         return out
 
 
-class AttentionTSSA(nn.Module):
-    """AttentionTSSA implementation retained from the track slab experiments."""
+class TSSA(nn.Module):
+    """TSSA implementation retained from the track slab experiments."""
 
     def __init__(self, dim, num_heads=8, qkv_bias=False, attn_drop=0.0, proj_drop=0.0, **kwargs):
         """Initialize layers and parameters."""
@@ -90,3 +90,8 @@ class AttentionTSSA(nn.Module):
         out = -torch.mul(w.mul(Pi.unsqueeze(-1)), attn)
         out = rearrange(out, "b h n d -> b n (h d)")
         return self.to_out(out)
+
+
+# Legacy pickle names: old Releases resolve to the paper-named implementations.
+CoordAtt = CA
+AttentionTSSA = TSSA

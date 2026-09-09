@@ -14,11 +14,11 @@ from torch import nn
 
 from ultralytics.nn.autobackend import check_class_names
 from ultralytics.nn.extra_modules import (
-    C2TSSA_DYT_Mona_SEFFN,
-    C2TSSA_DYT_Mona_SEFN,
-    CoordAtt,
-    Detect_MultiSEAM,
+    C2STR,
+    CA,
+    C2STRSpectral,
     GSConv,
+    MPCRHead,
     VoVGSCSP,
 )
 from ultralytics.nn.modules import (
@@ -2039,8 +2039,8 @@ def parse_model(d, ch, verbose=True):
         {
             GSConv,
             VoVGSCSP,
-            C2TSSA_DYT_Mona_SEFN,
-            C2TSSA_DYT_Mona_SEFFN,
+            C2STR,
+            C2STRSpectral,
             Classify,
             Conv,
             ConvTranspose,
@@ -2080,8 +2080,8 @@ def parse_model(d, ch, verbose=True):
     repeat_modules = frozenset(  # modules with 'repeat' arguments
         {
             VoVGSCSP,
-            C2TSSA_DYT_Mona_SEFN,
-            C2TSSA_DYT_Mona_SEFFN,
+            C2STR,
+            C2STRSpectral,
             BottleneckCSP,
             C1,
             C2,
@@ -2099,12 +2099,25 @@ def parse_model(d, ch, verbose=True):
             A2C2f,
         }
     )
+    # Manuscript spellings and historical YAML names share the same layer implementations.
+    paper_modules = {
+        "C2-STR": C2STR,
+        "C2-STR-Spectral": C2STRSpectral,
+        "MPCR-Head": MPCRHead,
+        "VoV-GSCSP": VoVGSCSP,
+        "C2TSSA_DYT_Mona_SEFFN": C2STRSpectral,
+        "C2TSSA_DYT_Mona_SEFN": C2STR,
+        "Detect_MultiSEAM": MPCRHead,
+        "CoordAtt": CA,
+    }
     for i, (f, n, m, args) in enumerate(d["backbone"] + d["head"]):  # from, number, module, args
         m = (
             getattr(torch.nn, m[3:])
             if m.startswith("nn.")
             else getattr(__import__("torchvision").ops, m[16:])
             if m.startswith("torchvision.ops.")
+            else paper_modules[m]
+            if m in paper_modules
             else globals()[m]
         )  # get module
         if restricted and not (isinstance(m, type) and issubclass(m, torch.nn.Module)):
@@ -2143,7 +2156,7 @@ def parse_model(d, ch, verbose=True):
                     args.extend((True, 1.2))
             if m is C2fCIB:
                 legacy = False
-        elif m is CoordAtt:
+        elif m is CA:
             c2 = ch[f]
             args = [c2, *args]  # Historical YAML argument is the reduction ratio, not output channels.
         elif m is AIFI:
@@ -2163,7 +2176,7 @@ def parse_model(d, ch, verbose=True):
         elif m in frozenset(
             {
                 Detect,
-                Detect_MultiSEAM,
+                MPCRHead,
                 WorldDetect,
                 YOLOEDetect,
                 Segment,

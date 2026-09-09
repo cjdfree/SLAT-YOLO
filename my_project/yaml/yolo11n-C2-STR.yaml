@@ -17,7 +17,7 @@ backbone:
   - [-1, 1, Conv, [1024, 3, 2]]
   - [-1, 2, "C3k2", [1024, true]]
   - [-1, 1, "SPPF", [1024, 5]]
-  - [-1, 2, "C2TSSA_DYT_Mona_SEFFN", [1024]]
+  - [-1, 2, "C2-STR-Spectral", [1024]]
 
 head:
   # [from, repeats, module, args]

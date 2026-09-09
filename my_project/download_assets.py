@@ -16,7 +16,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("kind", choices=("datasets", "checkpoints", "all"))
     args = parser.parse_args()
-    assets = json.loads((ROOT / "my_project/provenance/release_assets.json").read_text())
+    assets = json.loads((ROOT / "my_project/assets.json").read_text())
     cache = ROOT / "my_project/downloads"
     cache.mkdir(parents=True, exist_ok=True)
     for asset in assets:
