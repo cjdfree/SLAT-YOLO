@@ -1,4 +1,4 @@
-# Archived settings; paths and names follow the paper-facing release layout.
+# Archived training settings.
 task: detect
 mode: train
 model: my_project/yaml/yolo11n-C3k2-CA-MPCR-Head.yaml

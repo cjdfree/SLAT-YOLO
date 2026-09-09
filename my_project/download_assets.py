@@ -1,5 +1,5 @@
 # Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
-"""Download versioned dataset or checkpoint archives and verify their SHA256 digests."""
+"""Download released model checkpoints and verify their SHA256 digests."""
 
 import argparse
 import hashlib
@@ -14,14 +14,14 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     """Download selected assets from the repository release and extract inside the project."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("kind", choices=("datasets", "checkpoints", "all"))
-    args = parser.parse_args()
+    parser.add_argument("kind", nargs="?", default="checkpoints", choices=("checkpoints",))
+    parser.parse_args()
     assets = json.loads((ROOT / "my_project/assets.json").read_text())
     cache = ROOT / "my_project/downloads"
     cache.mkdir(parents=True, exist_ok=True)
     for asset in assets:
-        if args.kind != "all" and asset["kind"] != args.kind:
-            continue
+        if asset["kind"] != "checkpoints":
+            raise ValueError("Only model checkpoints may be distributed by this downloader.")
         path = cache / asset["name"]
         if not path.exists():
             partial = path.with_suffix(".part")

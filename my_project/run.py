@@ -4,8 +4,6 @@
 import argparse
 from pathlib import Path
 
-import yaml
-
 from ultralytics import YOLO
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,7 +14,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode", choices=("train", "val", "predict"))
     parser.add_argument("--model", default="my_project/yaml/slat-yolo.yaml")
-    parser.add_argument("--data", default="my_project/datasets/cracks.yaml")
+    parser.add_argument("--data", help="Path to your own YOLO dataset YAML; required for train and val.")
     parser.add_argument("--source", help="Image, directory, or video for prediction.")
     parser.add_argument("--device", default="cpu", help="Use 0 for the first CUDA GPU.")
     parser.add_argument("--epochs", type=int, default=1200)
@@ -25,6 +23,13 @@ def main():
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--name", default="slat-yolo")
     args = parser.parse_args()
+    if args.mode in {"train", "val"} and not args.data:
+        parser.error("Training and validation require --data pointing to your own YOLO dataset YAML.")
+    if args.mode == "predict" and not args.source:
+        parser.error("Prediction requires --source.")
+    data_path = Path(args.data).expanduser().resolve() if args.data else None
+    if data_path is not None and not data_path.is_file():
+        parser.error(f"Dataset YAML not found: {data_path}")
     model_path = Path(args.model)
     if not model_path.is_absolute():
         model_path = ROOT / model_path
@@ -33,27 +38,12 @@ def main():
     model = YOLO(str(model_path), task="detect")
     common = {"device": args.device, "imgsz": args.imgsz, "project": str(ROOT / "my_project/outputs"), "name": args.name}
     if args.mode == "predict":
-        if args.source is None:
-            parser.error("Prediction requires --source.")
         model.predict(source=args.source, save=True, **common)
         return
-    data_path = Path(args.data)
-    if not data_path.is_absolute():
-        data_path = ROOT / data_path
-    data = yaml.safe_load(data_path.read_text(encoding="utf-8"))
-    dataset_root = Path(data["path"])
-    if not dataset_root.is_absolute():
-        dataset_root = (ROOT / dataset_root).resolve()
-    if not dataset_root.is_dir():
-        parser.error("Dataset is missing. Run python -m my_project.download_assets datasets first.")
-    data["path"] = str(dataset_root)
-    resolved = ROOT / "my_project/outputs/resolved-data.yaml"
-    resolved.parent.mkdir(parents=True, exist_ok=True)
-    resolved.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
     if args.mode == "train":
-        # These values come from archived args.yaml; optimizer=auto is recorded, not inferred as AdamW.
+        # Project training defaults: 1024-pixel input; remaining unspecified options use Ultralytics defaults.
         model.train(
-            data=str(resolved),
+            data=str(data_path),
             epochs=args.epochs,
             batch=args.batch,
             workers=args.workers,
@@ -70,7 +60,7 @@ def main():
             **common,
         )
     else:
-        model.val(data=str(resolved), batch=args.batch, workers=args.workers, split="val", **common)
+        model.val(data=str(data_path), batch=args.batch, workers=args.workers, split="val", **common)
 
 
 if __name__ == "__main__":

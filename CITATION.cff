@@ -4,7 +4,7 @@ type: software
 title: "SLAT-YOLO"
 authors:
   - name: "SLAT-YOLO contributors"
-version: 0.1.2
+version: 0.1.3
 date-released: 2026-09-09
 url: "https://github.com/cjdfree/SLAT-YOLO"
 repository-code: "https://github.com/cjdfree/SLAT-YOLO"

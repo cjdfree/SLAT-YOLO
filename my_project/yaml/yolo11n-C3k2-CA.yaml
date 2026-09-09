@@ -1,5 +1,5 @@
 # Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
-# SLAT-YOLO single-class nano configuration. See my_project/REPRODUCIBILITY.md.
+# SLAT-YOLO single-class nano configuration. See README.md.
 
 nc: 1
 scales:

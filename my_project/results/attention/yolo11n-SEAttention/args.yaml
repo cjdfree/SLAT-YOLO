@@ -1,4 +1,4 @@
-# Archived training arguments; machine-specific paths shortened to filenames.
+# Archived training settings.
 task: detect
 mode: train
 model: yolo11-SEAttention.yaml
